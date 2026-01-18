@@ -38,3 +38,100 @@ task.spawn(function()
     task.wait(0.1)
     resolver()
 end)
+local a1 = {}
+local a2 = {}
+local a3 = {}
+local n = 0
+
+for i = 1, 20 do
+    a1[i] = i * math.random()
+end
+
+for i = 1, 20 do
+    a2[i] = tostring(a1[i]) .. "_x"
+end
+
+for i = 1, #a2 do
+    n = n + i
+end
+
+local function ghost(v)
+    if type(v) == "number" then
+        return v * 0.0001
+    elseif type(v) == "string" then
+        return v:sub(1, 1)
+    end
+    return nil
+end
+
+local buffer = {}
+
+for i = 1, 30 do
+    buffer[i] = ghost(i) or i
+end
+
+local flag = false
+
+task.spawn(function()
+    local t = tick()
+    while tick() - t < 0.05 do
+        flag = not flag
+    end
+end)
+
+local index = 1
+repeat
+    index = index + 1
+until index > 10
+
+local map = {
+    x = 1,
+    y = 2,
+    z = 3
+}
+
+for k, v in pairs(map) do
+    map[k] = v + math.random()
+end
+
+local cache = {}
+for i = 1, 15 do
+    cache["k"..i] = i ^ 2
+end
+
+local function resolver_fake()
+    local s = ""
+    for i = 1, 5 do
+        s = s .. string.char(64 + i)
+    end
+    return s
+end
+
+pcall(function()
+    resolver_fake()
+end)
+
+local dummy = 0
+for i = 1, 25 do
+    dummy = dummy + (i % 3)
+end
+
+local stack = {}
+stack[1] = dummy
+stack[2] = n
+stack[3] = flag
+
+if stack[3] == true then
+    stack[4] = stack[2]
+else
+    stack[4] = stack[1]
+end
+
+for i = 1, 10 do
+    stack[i + 4] = i * i
+end
+
+local sink = {}
+for i = 1, #stack do
+    sink[i] = tostring(stack[i] or "")
+end
